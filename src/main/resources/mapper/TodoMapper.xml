@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.khodecamp.online.shop.mapper.TodoMapper">
+    <!-- Result Map -->
+    <resultMap id="TodoResultMap" type="com.khodecamp.online.shop.model.Todo">
+        <id property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="isCompleted" column="IS_COMPLETED"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+    </resultMap>
+
+    <!-- Base SQL -->
+    <sql id="baseSql">
+        SELECT ID, NAME, DESCRIPTION, CREATED_AT, UPDATED_AT
+        FROM TODO
+    </sql>
+
+    <!-- Find All -->
+    <select id="findAll" resultMap="TodoResultMap">
+        <include refid="baseSql"/>
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <!-- Find By ID -->
+    <select id="findById" resultMap="TodoResultMap">
+        <include refid="baseSql"/>
+        WHERE ID = #{id}
+    </select>
+
+    <!-- Find By Completed -->
+    <select id="findByCompleted" resultMap="TodoResultMap">
+        SELECT * FROM TODO
+        WHERE IS_COMPLETED = #{isCompleted}
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <!-- Search -->
+    <select id="search" resultMap="TodoResultMap">
+        <include refid="baseSql"/>
+        <where>
+            <if test="searchTerm != null and searchTerm != ''">
+                AND (
+                UPPER(NAME) LIKE UPPER(CONCAT('%', #{searchTerm}, '%'))
+                OR UPPER(DESCRIPTION) LIKE UPPER(CONCAT('%', #{searchTerm}, '%'))
+                )
+            </if>
+        </where>
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <!-- Insert -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO TODO (NAME,
+                          DESCRIPTION,
+                          IS_COMPLETED,
+                          CREATED_AT,
+                          UPDATED_AT)
+        VALUES (#{name},
+                #{description},
+                #{isCompleted},
+                CURRENT_TIMESTAMP,
+                CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- Update -->
+    <update id="update">
+        UPDATE TODO
+        SET
+            NAME = #{name},
+            DESCRIPTION = #{description},
+            IS_COMPLETED = #{isCompleted},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE ID = #{id}
+    </update>
+
+    <!-- Update Status -->
+    <update id="updateStatus">
+        UPDATE TODO
+        SET
+            IS_COMPLETED = #{isCompleted},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE ID = #{id}
+    </update>
+
+    <!-- Delete -->
+    <delete id="delete">
+        DELETE FROM TODO
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>
