@@ -1,4 +1,4 @@
-package com.khodecamp.online.shop.model;
+package com.khodecamp.online.shop.modules.todo.model;
 
 import lombok.Data;
 

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.khodecamp.online.shop.mapper.TodoMapper">
+<mapper namespace="com.khodecamp.online.shop.modules.todo.mapper.TodoMapper">
     <!-- Result Map -->
-    <resultMap id="TodoResultMap" type="com.khodecamp.online.shop.model.Todo">
+    <resultMap id="TodoResultMap" type="com.khodecamp.online.shop.modules.todo.model.Todo">
         <id property="id" column="ID"/>
         <result property="name" column="NAME"/>
         <result property="description" column="DESCRIPTION"/>

@@ -1,6 +1,6 @@
-package com.khodecamp.online.shop.mapper;
+package com.khodecamp.online.shop.modules.todo.mapper;
 
-import com.khodecamp.online.shop.model.Todo;
+import com.khodecamp.online.shop.modules.todo.model.Todo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

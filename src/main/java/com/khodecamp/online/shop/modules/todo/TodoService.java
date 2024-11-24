@@ -1,7 +1,10 @@
-package com.khodecamp.online.shop.service;
+package com.khodecamp.online.shop.modules.todo;
 
-import com.khodecamp.online.shop.mapper.TodoMapper;
-import com.khodecamp.online.shop.model.Todo;
+import com.khodecamp.online.shop.core.annotation.PageableParam;
+import com.khodecamp.online.shop.core.request.PageRequest;
+import com.khodecamp.online.shop.modules.todo.mapper.TodoMapper;
+import com.khodecamp.online.shop.modules.todo.model.Todo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TodoService {
     final private TodoMapper todoMapper;
 
@@ -18,6 +22,13 @@ public class TodoService {
     }
 
     public List<Todo> findAll() {
+        return todoMapper.findAll();
+    }
+
+    public List<Todo> getAllTodosWithPaginated(
+            @PageableParam PageRequest pageRequest
+    ) {
+        log.info("Page: {}, Limit: {}", pageRequest.getPage(), pageRequest.getLimit());
         return todoMapper.findAll();
     }
 
