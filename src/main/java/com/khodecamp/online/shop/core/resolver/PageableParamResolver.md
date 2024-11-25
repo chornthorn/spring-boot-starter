@@ -39,9 +39,9 @@ public Object resolveArgument(MethodParameter parameter,
 Example Usage in a Controller:
 ```java
 @GetMapping("/items")
-public Page<Item> getItems(@PageableParam PageRequest pageRequest) {
-    // pageRequest is automatically populated with validated page/limit values
-    return itemService.findAll(pageRequest);
+public Page<Item> getItems(@PageableParam PageRequest paginationRequest) {
+    // paginationRequest is automatically populated with validated page/limit values
+    return itemService.findAll(paginationRequest);
 }
 ```
 

@@ -5,7 +5,7 @@ import com.khodecamp.online.shop.core.exception.InternalServerErrorException;
 import com.khodecamp.online.shop.core.exception.NotFoundException;
 import com.khodecamp.online.shop.core.pagination.PaginationManager;
 import com.khodecamp.online.shop.core.pagination.PaginationResponse;
-import com.khodecamp.online.shop.core.request.PageRequest;
+import com.khodecamp.online.shop.core.request.PaginationRequest;
 import com.khodecamp.online.shop.modules.user.dto.CreateUserDto;
 import com.khodecamp.online.shop.modules.user.dto.UserSpecial;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
@@ -25,9 +25,9 @@ public class UserService {
         this.paginationManager = paginationManager;
     }
 
-    public PaginationResponse<User> getAllUsers(PageRequest pageRequest) {
+    public PaginationResponse<User> getAllUsers(PaginationRequest paginationRequest) {
         return paginationManager.paginate(
-                new PaginationManager.Pager(pageRequest.getPage(), pageRequest.getLimit()),
+                new PaginationManager.Pager(paginationRequest.getPage(), paginationRequest.getLimit()),
                 req -> userMapper.selectAll(req.getOffset(), req.getLimit()),
                 (r) -> userMapper.countAll()
         );

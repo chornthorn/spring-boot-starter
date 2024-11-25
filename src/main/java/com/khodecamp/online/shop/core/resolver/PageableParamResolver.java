@@ -2,7 +2,7 @@ package com.khodecamp.online.shop.core.resolver;
 
 import com.khodecamp.online.shop.core.annotation.PageableParam;
 import com.khodecamp.online.shop.core.config.PaginationConfig;
-import com.khodecamp.online.shop.core.request.PageRequest;
+import com.khodecamp.online.shop.core.request.PaginationRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -62,8 +62,7 @@ public class PageableParamResolver implements HandlerMethodArgumentResolver {
             log.warn("Invalid limit value: {}", limitValue);
         }
 
-//        return PageRequest.of(page - 1, limit); // Convert to 0-based index for internal use
-        return PageRequest.of(page, limit);
+        return PaginationRequest.of(page, limit);
     }
 }
 

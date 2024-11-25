@@ -3,13 +3,17 @@ package com.khodecamp.online.shop.modules.todo;
 import com.khodecamp.online.shop.core.annotation.PageableParam;
 import com.khodecamp.online.shop.core.annotation.SearchableParam;
 import com.khodecamp.online.shop.core.annotation.SortableParam;
-import com.khodecamp.online.shop.core.request.PageRequest;
+import com.khodecamp.online.shop.core.request.PaginationRequest;
 import com.khodecamp.online.shop.core.response.PageResponse;
 import com.khodecamp.online.shop.core.request.SortRequest;
 import com.khodecamp.online.shop.core.response.ResponseBuilder;
 import com.khodecamp.online.shop.core.response.ResponseDto;
 import com.khodecamp.online.shop.core.request.SearchRequest;
 import com.khodecamp.online.shop.modules.todo.model.Todo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/todos")
 @Slf4j
+@Tag(name = "Todo", description = "Todo API")
 public class TodoController {
 
     final private TodoService todoService;
@@ -32,24 +37,27 @@ public class TodoController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all todos")
     public List<Todo> getAllTodos() {
         return todoService.findAll();
     }
 
     @GetMapping("/paginated")
+    @Operation(summary = "Get all todos with pagination")
     public ResponseDto<List<Map<String, Object>>> getAllTodosWithPaginated(
             @SearchableParam(
                     searchFields = {"name", "description", "price"}
             )
+            @Parameter(schema = @Schema(nullable = true,implementation = SearchRequest.class),allowEmptyValue = true)
             SearchRequest search,
             @PageableParam
-            PageRequest pageRequest,
+            PaginationRequest paginationRequest,
             @SortableParam(
                     allowedFields = {"name", "price", "createdAt"}
             )
             List<SortRequest> sortRequest
     ) {
-        log.info("Page: {}", pageRequest);
+        log.info("Page: {}", paginationRequest);
         log.info("Sort: {}", sortRequest);
         log.info("Search: {}", search);
 
@@ -64,8 +72,8 @@ public class TodoController {
         );
 
         // Calculate pagination with 1-based indexing
-        int startIndex = (pageRequest.getPage() - 1) * pageRequest.getLimit(); // Convert to 0-based index for calculation
-        int endIndex = Math.min(startIndex + pageRequest.getLimit(), todos.size());
+        int startIndex = (paginationRequest.getPage() - 1) * paginationRequest.getLimit(); // Convert to 0-based index for calculation
+        int endIndex = Math.min(startIndex + paginationRequest.getLimit(), todos.size());
         List<Map<String, Object>> paginatedTodos = startIndex < todos.size()
                 ? todos.subList(startIndex, endIndex)
                 : Collections.emptyList();
@@ -73,8 +81,8 @@ public class TodoController {
         PageResponse<Map<String, Object>> pageResponse = PageResponse.of(
                 paginatedTodos,
                 todos.size(),
-                pageRequest.getPage(), // Keep original 1-based page number
-                pageRequest.getLimit()
+                paginationRequest.getPage(), // Keep original 1-based page number
+                paginationRequest.getLimit()
         );
 
         return ResponseBuilder.successPage(pageResponse);
@@ -82,6 +90,7 @@ public class TodoController {
 
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get todo by id")
     public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
         Todo todo = todoService.findById(id);
         if (todo == null) {
@@ -91,12 +100,14 @@ public class TodoController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new todo")
     public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
         todoService.create(todo);
         return ResponseEntity.ok(todo);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update a todo")
     public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
         Todo existingTodo = todoService.findById(id);
         if (existingTodo == null) {
@@ -108,6 +119,7 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a todo by id")
     public ResponseEntity<Todo> deleteTodoById(@PathVariable Long id) {
         Todo todo = todoService.findById(id);
         if (todo == null) {
@@ -118,11 +130,13 @@ public class TodoController {
     }
 
     @GetMapping("/completed")
+    @Operation(summary = "Get todos by status")
     public List<Todo> getTodosByStatus(@RequestParam Boolean completed) {
         return todoService.findByCompleted(completed);
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Update todo status")
     public ResponseEntity<Void> updateTodoStatus(
             @PathVariable Long id,
             @RequestParam Boolean completed) {

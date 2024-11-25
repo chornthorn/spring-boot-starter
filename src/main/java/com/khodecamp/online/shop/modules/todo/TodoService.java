@@ -1,7 +1,7 @@
 package com.khodecamp.online.shop.modules.todo;
 
 import com.khodecamp.online.shop.core.annotation.PageableParam;
-import com.khodecamp.online.shop.core.request.PageRequest;
+import com.khodecamp.online.shop.core.request.PaginationRequest;
 import com.khodecamp.online.shop.modules.todo.mapper.TodoMapper;
 import com.khodecamp.online.shop.modules.todo.model.Todo;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ public class TodoService {
     }
 
     public List<Todo> getAllTodosWithPaginated(
-            @PageableParam PageRequest pageRequest
+            @PageableParam PaginationRequest paginationRequest
     ) {
-        log.info("Page: {}, Limit: {}", pageRequest.getPage(), pageRequest.getLimit());
+        log.info("Page: {}, Limit: {}", paginationRequest.getPage(), paginationRequest.getLimit());
         return todoMapper.findAll();
     }
 
