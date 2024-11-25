@@ -3,21 +3,34 @@ package com.khodecamp.online.shop.modules.user;
 import com.khodecamp.online.shop.core.exception.BadRequestException;
 import com.khodecamp.online.shop.core.exception.InternalServerErrorException;
 import com.khodecamp.online.shop.core.exception.NotFoundException;
+import com.khodecamp.online.shop.core.pagination.PaginationManager;
+import com.khodecamp.online.shop.core.pagination.PaginationResponse;
+import com.khodecamp.online.shop.core.request.PageRequest;
 import com.khodecamp.online.shop.modules.user.dto.CreateUserDto;
 import com.khodecamp.online.shop.modules.user.dto.UserSpecial;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
 import com.khodecamp.online.shop.modules.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserMapper userMapper;
+    private final PaginationManager paginationManager;
 
-    @Autowired
-    public UserService(UserMapper userMapper) {
+    public UserService(UserMapper userMapper, PaginationManager paginationManager) {
         this.userMapper = userMapper;
+        this.paginationManager = paginationManager;
+    }
+
+    public PaginationResponse<User> getAllUsers(PageRequest pageRequest) {
+        return paginationManager.paginate(
+                new PaginationManager.Pager(pageRequest.getPage(), pageRequest.getLimit()),
+                req -> userMapper.selectAll(req.getOffset(), req.getLimit()),
+                (r) -> userMapper.countAll()
+        );
     }
 
     public User getUserByUsername(String username) {

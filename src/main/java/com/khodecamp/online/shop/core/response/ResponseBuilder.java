@@ -1,11 +1,10 @@
 package com.khodecamp.online.shop.core.response;
 
-import com.khodecamp.online.shop.core.request.PageResult;
+import com.khodecamp.online.shop.core.pagination.PaginationResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ResponseBuilder {
 
@@ -33,17 +32,17 @@ public class ResponseBuilder {
         );
     }
 
-    public static <T> ResponseDto<List<T>> successPage(PageResult<T> pageResult) {
+    public static <T> ResponseDto<List<T>> successPage(PageResponse<T> pageResponse) {
         ResponsePage pagination = new ResponsePage(
-                pageResult.getPage(),
-                pageResult.getLimit(),
-                pageResult.getTotal(),
-                pageResult.getPages(),
-                pageResult.isLast()
+                pageResponse.getPage(),
+                pageResponse.getLimit(),
+                pageResponse.getTotal(),
+                pageResponse.getPages(),
+                pageResponse.isLast()
         );
 
         ResponseData<List<T>> data = new ResponseData<>();
-        data.setItem(pageResult.getItems());
+        data.setItem(pageResponse.getItems());
         data.setPagination(pagination);
 
         return new ResponseDto<>(
@@ -54,10 +53,7 @@ public class ResponseBuilder {
         );
     }
 
-    public static <T> ResponseDto<List<T>> successList(List<T> items) {
-        ResponseData<List<T>> data = new ResponseData<>();
-        data.setItem(items);
-
+    public static <T> ResponseDto<List<T>> paginate(PaginationResponse<T> data) {
         return new ResponseDto<>(
                 true,
                 "Success",

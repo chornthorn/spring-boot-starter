@@ -7,6 +7,8 @@ import com.khodecamp.online.shop.modules.user.model.User;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -29,9 +31,31 @@ public interface UserMapper {
     @DeleteProvider(type = SqlProvider.class, method = "deleteUser")
     int deleteUser(Long id);
 
+    @SelectProvider(type = SqlProvider.class, method = "selectAll")
+    List<User> selectAll(int page, int limit);
+
+    @SelectProvider(type = SqlProvider.class, method = "countAll")
+    long countAll();
+
     class SqlProvider {
 
         private final String UserTable = "USERS";
+
+        public String selectAll() {
+            return new SQL() {{
+                SELECT("*");
+                FROM(UserTable);
+                LIMIT("#{limit}");
+                OFFSET("#{page}");
+            }}.toString();
+        }
+
+        public String countAll() {
+            return new SQL() {{
+                SELECT("COUNT(*)");
+                FROM(UserTable);
+            }}.toString();
+        }
 
         public String selectByUsername() {
             return new SQL() {{

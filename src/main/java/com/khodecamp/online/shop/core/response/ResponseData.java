@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ResponseData<T> {
     private T item;
-    private ResponsePage pagination;
+    private Object pagination;
 }

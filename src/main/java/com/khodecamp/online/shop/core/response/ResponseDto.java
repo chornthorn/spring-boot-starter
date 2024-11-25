@@ -12,6 +12,6 @@ import lombok.Setter;
 public class ResponseDto<T> {
     private boolean status;
     private String message;
-    private ResponseData<T> data;
+    private Object data;
     private ResponseError error;
 }

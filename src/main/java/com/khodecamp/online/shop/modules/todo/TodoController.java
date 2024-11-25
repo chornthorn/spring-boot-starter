@@ -4,7 +4,7 @@ import com.khodecamp.online.shop.core.annotation.PageableParam;
 import com.khodecamp.online.shop.core.annotation.SearchableParam;
 import com.khodecamp.online.shop.core.annotation.SortableParam;
 import com.khodecamp.online.shop.core.request.PageRequest;
-import com.khodecamp.online.shop.core.request.PageResult;
+import com.khodecamp.online.shop.core.response.PageResponse;
 import com.khodecamp.online.shop.core.request.SortRequest;
 import com.khodecamp.online.shop.core.response.ResponseBuilder;
 import com.khodecamp.online.shop.core.response.ResponseDto;
@@ -70,14 +70,14 @@ public class TodoController {
                 ? todos.subList(startIndex, endIndex)
                 : Collections.emptyList();
 
-        PageResult<Map<String, Object>> pageResult = PageResult.of(
+        PageResponse<Map<String, Object>> pageResponse = PageResponse.of(
                 paginatedTodos,
                 todos.size(),
                 pageRequest.getPage(), // Keep original 1-based page number
                 pageRequest.getLimit()
         );
 
-        return ResponseBuilder.successPage(pageResult);
+        return ResponseBuilder.successPage(pageResponse);
     }
 
 
