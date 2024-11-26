@@ -1,7 +1,7 @@
 package com.khodecamp.online.shop.core.service;
 
 import com.khodecamp.online.shop.core.config.JwtConfig;
-import com.khodecamp.online.shop.modules.auth.security.CustomUserDetails;
+import com.khodecamp.online.shop.core.common.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

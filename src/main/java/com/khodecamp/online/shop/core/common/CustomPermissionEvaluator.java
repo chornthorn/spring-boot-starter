@@ -1,4 +1,4 @@
-package com.khodecamp.online.shop.modules.auth.security;
+package com.khodecamp.online.shop.core.common;
 
 import com.khodecamp.online.shop.modules.auth.service.PermissionService;
 import lombok.RequiredArgsConstructor;

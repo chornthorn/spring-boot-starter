@@ -5,7 +5,7 @@ import com.khodecamp.online.shop.core.exception.UnauthorizedException;
 import com.khodecamp.online.shop.core.service.JwtService;
 import com.khodecamp.online.shop.modules.auth.dto.LoginRequest;
 import com.khodecamp.online.shop.modules.auth.dto.LoginResponse;
-import com.khodecamp.online.shop.modules.auth.security.CustomUserDetails;
+import com.khodecamp.online.shop.core.common.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

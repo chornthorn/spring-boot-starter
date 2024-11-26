@@ -1,7 +1,8 @@
-package com.khodecamp.online.shop.modules.auth.security;
+package com.khodecamp.online.shop.core.filter;
 
 import com.khodecamp.online.shop.core.exception.UnauthorizedException;
 import com.khodecamp.online.shop.core.service.JwtService;
+import com.khodecamp.online.shop.core.common.CustomUserDetails;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
 import com.khodecamp.online.shop.modules.user.model.User;
 import jakarta.servlet.FilterChain;

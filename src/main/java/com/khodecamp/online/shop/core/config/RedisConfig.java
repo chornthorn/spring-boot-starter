@@ -1,6 +1,6 @@
 package com.khodecamp.online.shop.core.config;
 
-import com.khodecamp.online.shop.modules.auth.security.ResourcePermission;
+import com.khodecamp.online.shop.modules.auth.model.ResourcePermission;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;

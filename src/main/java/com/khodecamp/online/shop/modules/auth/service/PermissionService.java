@@ -1,6 +1,6 @@
 package com.khodecamp.online.shop.modules.auth.service;
 
-import com.khodecamp.online.shop.modules.auth.security.ResourcePermission;
+import com.khodecamp.online.shop.modules.auth.model.ResourcePermission;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

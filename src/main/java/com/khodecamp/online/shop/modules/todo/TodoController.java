@@ -1,5 +1,6 @@
 package com.khodecamp.online.shop.modules.todo;
 
+import com.khodecamp.online.shop.core.annotation.AllowAnonymous;
 import com.khodecamp.online.shop.core.annotation.PageableParam;
 import com.khodecamp.online.shop.core.annotation.SearchableParam;
 import com.khodecamp.online.shop.core.annotation.SortableParam;
@@ -29,6 +30,7 @@ import java.util.Map;
 @Slf4j
 @Tag(name = "Todo", description = "Todo API")
 @PreAuthorize("hasRole('admin') and hasPermission('todo', 'read')")
+@AllowAnonymous
 public class TodoController {
 
     final private TodoService todoService;
@@ -40,6 +42,7 @@ public class TodoController {
 
     @GetMapping
     @Operation(summary = "Get all todos")
+//    @AllowAnonymous
     public List<Todo> getAllTodos() {
         return todoService.findAll();
     }

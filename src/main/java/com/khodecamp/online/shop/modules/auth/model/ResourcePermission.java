@@ -1,4 +1,4 @@
-package com.khodecamp.online.shop.modules.auth.security;
+package com.khodecamp.online.shop.modules.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

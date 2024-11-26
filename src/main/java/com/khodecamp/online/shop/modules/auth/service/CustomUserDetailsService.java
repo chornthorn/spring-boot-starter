@@ -1,6 +1,6 @@
 package com.khodecamp.online.shop.modules.auth.service;
 
-import com.khodecamp.online.shop.modules.auth.security.CustomUserDetails;
+import com.khodecamp.online.shop.core.common.CustomUserDetails;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
 import com.khodecamp.online.shop.modules.user.model.User;
 import lombok.RequiredArgsConstructor;

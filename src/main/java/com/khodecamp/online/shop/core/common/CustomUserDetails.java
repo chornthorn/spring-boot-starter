@@ -1,4 +1,4 @@
-package com.khodecamp.online.shop.modules.auth.security;
+package com.khodecamp.online.shop.core.common;
 
 import com.khodecamp.online.shop.modules.user.model.User;
 import lombok.Getter;

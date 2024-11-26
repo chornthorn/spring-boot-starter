@@ -1,7 +1,7 @@
 package com.khodecamp.online.shop.modules.user.mapper;
 
 import com.khodecamp.online.shop.modules.auth.model.Role;
-import com.khodecamp.online.shop.modules.auth.security.ResourcePermission;
+import com.khodecamp.online.shop.modules.auth.model.ResourcePermission;
 import com.khodecamp.online.shop.modules.user.dto.CreateUserDto;
 import com.khodecamp.online.shop.modules.user.dto.UpdateUserDto;
 import com.khodecamp.online.shop.modules.user.dto.UserSpecial;

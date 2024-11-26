@@ -1,11 +1,10 @@
 package com.khodecamp.online.shop.core.config;
 
-import com.khodecamp.online.shop.modules.auth.security.CustomPermissionEvaluator;
-import com.khodecamp.online.shop.modules.auth.security.JwtAuthenticationFilter;
+import com.khodecamp.online.shop.core.common.CustomPermissionEvaluator;
+import com.khodecamp.online.shop.core.filter.JwtAuthenticationFilter;
+import com.khodecamp.online.shop.core.common.AnonymousAuthorizationManager;
 import com.khodecamp.online.shop.modules.auth.service.PermissionService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -26,8 +25,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
@@ -35,9 +33,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final PermissionService permissionService;
+    private final AnonymousAuthorizationManager anonymousAuthorizationManager;
 
     // public routes
     private static final String[] PUBLIC_ROUTES = {
@@ -54,6 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
@@ -62,7 +61,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PUBLIC_ROUTES).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().access(anonymousAuthorizationManager)
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
