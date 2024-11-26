@@ -2,6 +2,7 @@ package com.khodecamp.online.shop;
 
 import com.khodecamp.online.shop.core.config.AppConfig;
 import com.khodecamp.online.shop.core.config.PaginationConfig;
+import com.khodecamp.online.shop.core.config.JwtConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,6 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties({
         AppConfig.class,
         PaginationConfig.class,
+        JwtConfig.class
 })
 public class Application {
 

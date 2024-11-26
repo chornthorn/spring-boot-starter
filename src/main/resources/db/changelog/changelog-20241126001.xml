@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+    <changeSet id="1732609259562-1" author="khodecamp">
+
+        <!--  ChangeSet goes here  -->
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <tableExists tableName="ROLES"/>
+                    <tableExists tableName="USER_ROLES"/>
+                    <tableExists tableName="RESOURCES"/>
+                    <tableExists tableName="SCOPES"/>
+                    <tableExists tableName="RESOURCE_SCOPES"/>
+                    <tableExists tableName="PERMISSIONS"/>
+                    <tableExists tableName="ROLES_PERMISSIONS"/>
+                </not>
+            </and>
+        </preConditions>
+
+        <createTable tableName="ROLES">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="USER_ROLES">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="RESOURCES">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="SCOPES">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="RESOURCE_SCOPES">
+            <column name="resource_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scope_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Permissions table to store the permissions of the user that contains the name of permission, resource, and scope -->
+        <createTable tableName="PERMISSIONS">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="resource_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scope_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Roles_Permissions table to store the relationship between roles and permissions -->
+        <createTable tableName="ROLES_PERMISSIONS">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Unique Constraint -->
+        <addUniqueConstraint
+                tableName="USER_ROLES"
+                columnNames="user_id, role_id"
+                constraintName="UQ_USER_ROLES"/>
+
+        <addUniqueConstraint
+                tableName="RESOURCE_SCOPES"
+                columnNames="resource_id, scope_id"
+                constraintName="UQ_RESOURCE_SCOPES"/>
+
+        <addUniqueConstraint
+                tableName="PERMISSIONS"
+                columnNames="name"
+                constraintName="UQ_PERMISSIONS_NAME"/>
+
+        <addUniqueConstraint
+                tableName="ROLES_PERMISSIONS"
+                columnNames="role_id, permission_id"
+                constraintName="UQ_ROLES_PERMISSIONS"/>
+
+        <!-- Index -->
+        <createIndex indexName="IDX_USER_ROLES_USER_ID" tableName="USER_ROLES">
+            <column name="user_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_USER_ROLES_ROLE_ID" tableName="USER_ROLES">
+            <column name="role_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_RESOURCE_SCOPES_RESOURCE_ID" tableName="RESOURCE_SCOPES">
+            <column name="resource_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_RESOURCE_SCOPES_SCOPE_ID" tableName="RESOURCE_SCOPES">
+            <column name="scope_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_PERMISSIONS_NAME" tableName="PERMISSIONS">
+            <column name="name"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_PERMISSIONS_RESOURCE_ID" tableName="PERMISSIONS">
+            <column name="resource_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_PERMISSIONS_SCOPE_ID" tableName="PERMISSIONS">
+            <column name="scope_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_ROLES_PERMISSIONS_ROLE_ID" tableName="ROLES_PERMISSIONS">
+            <column name="role_id"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_ROLES_PERMISSIONS_PERMISSION_ID" tableName="ROLES_PERMISSIONS">
+            <column name="permission_id"/>
+        </createIndex>
+
+        <!-- Add Foreign Key Constraint -->
+        <addForeignKeyConstraint baseTableName="USER_ROLES"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="USERS"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 constraintName="FK_USER_ROLES_USERS"/>
+
+        <addForeignKeyConstraint baseTableName="USER_ROLES"
+                                 baseColumnNames="role_id"
+                                 referencedTableName="ROLES"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 constraintName="FK_USER_ROLES_ROLES"/>
+
+        <addForeignKeyConstraint baseTableName="RESOURCE_SCOPES"
+                                 baseColumnNames="resource_id"
+                                 referencedTableName="RESOURCES"
+                                 referencedColumnNames="id"
+                                 constraintName="FK_RESOURCE_SCOPES_RESOURCES"/>
+
+        <addForeignKeyConstraint baseTableName="RESOURCE_SCOPES"
+                                 baseColumnNames="scope_id"
+                                 referencedTableName="SCOPES"
+                                 referencedColumnNames="id"
+                                 constraintName="FK_RESOURCE_SCOPES_SCOPES"/>
+
+        <addForeignKeyConstraint baseTableName="PERMISSIONS"
+                                    baseColumnNames="resource_id"
+                                    referencedTableName="RESOURCES"
+                                    referencedColumnNames="id"
+                                    constraintName="FK_PERMISSIONS_RESOURCES"/>
+
+        <addForeignKeyConstraint baseTableName="PERMISSIONS"
+                                    baseColumnNames="scope_id"
+                                    referencedTableName="SCOPES"
+                                    referencedColumnNames="id"
+                                    constraintName="FK_PERMISSIONS_SCOPES"/>
+
+        <addForeignKeyConstraint baseTableName="ROLES_PERMISSIONS"
+                                    baseColumnNames="role_id"
+                                    referencedTableName="ROLES"
+                                    referencedColumnNames="id"
+                                    constraintName="FK_ROLES_PERMISSIONS_ROLES"/>
+
+        <addForeignKeyConstraint baseTableName="ROLES_PERMISSIONS"
+                                    baseColumnNames="permission_id"
+                                    referencedTableName="PERMISSIONS"
+                                    referencedColumnNames="id"
+                                    constraintName="FK_ROLES_PERMISSIONS_PERMISSIONS"/>
+
+    </changeSet>
+</databaseChangeLog>

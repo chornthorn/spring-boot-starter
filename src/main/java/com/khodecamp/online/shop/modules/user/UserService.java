@@ -6,23 +6,73 @@ import com.khodecamp.online.shop.core.exception.NotFoundException;
 import com.khodecamp.online.shop.core.pagination.PaginationManager;
 import com.khodecamp.online.shop.core.pagination.PaginationResponse;
 import com.khodecamp.online.shop.core.request.PaginationRequest;
+import com.khodecamp.online.shop.modules.auth.dto.UserRegistrationDto;
 import com.khodecamp.online.shop.modules.user.dto.CreateUserDto;
-import com.khodecamp.online.shop.modules.user.dto.UserSpecial;
 import com.khodecamp.online.shop.modules.user.mapper.UserMapper;
 import com.khodecamp.online.shop.modules.user.model.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserMapper userMapper;
     private final PaginationManager paginationManager;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserMapper userMapper, PaginationManager paginationManager) {
-        this.userMapper = userMapper;
-        this.paginationManager = paginationManager;
+    public User loadUserById(Long id) {
+        User user = userMapper.findById(id);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user;
+    }
+
+
+    // findByUsernameWithRoles
+    public User findByUsernameWithRoles(String username) {
+        User user = userMapper.findByUsernameWithRoles(username);
+
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user;
+    }
+
+
+    @Transactional
+    public User createUser(UserRegistrationDto registrationDto) {
+        validateNewUser(registrationDto);
+
+        User user = new User();
+        user.setUsername(registrationDto.getUsername());
+        user.setEmail(registrationDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+
+        userMapper.insert(user);
+
+        // Assign default role
+        assignDefaultRole(user.getId());
+
+        return user;
+    }
+
+    private void validateNewUser(UserRegistrationDto dto) {
+        if (userMapper.findByUsername(dto.getUsername()) != null) {
+            throw new BadRequestException("Username already exists");
+        }
+    }
+
+    private void assignDefaultRole(Long userId) {
+//        userMapper.assignRole(userId, 1L);
     }
 
     public PaginationResponse<User> getAllUsers(PaginationRequest paginationRequest) {
@@ -34,7 +84,7 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        User user = userMapper.selectByUsername(username);
+        User user = userMapper.findByUsernameWithRoles(username);
 
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -43,8 +93,8 @@ public class UserService {
         return user;
     }
 
-    public UserSpecial getUserById(Long id) {
-        UserSpecial user = userMapper.selectUserById(id);
+    public User getUserById(Long id) {
+        User user = userMapper.findById(id);
 
         if (user == null) {
             throw new NotFoundException("User not found");

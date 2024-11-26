@@ -1,8 +1,12 @@
 package com.khodecamp.online.shop.modules.user.model;
 
+import com.khodecamp.online.shop.modules.auth.model.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Setter
@@ -15,4 +19,5 @@ public class User {
     private String createdAt;
     private String updatedAt;
     private String identity;
+    private Set<Role> roles = new HashSet<>();
 }

@@ -6,12 +6,12 @@ import com.khodecamp.online.shop.core.request.PaginationRequest;
 import com.khodecamp.online.shop.core.response.ResponseBuilder;
 import com.khodecamp.online.shop.core.response.ResponseDto;
 import com.khodecamp.online.shop.modules.user.dto.CreateUserDto;
-import com.khodecamp.online.shop.modules.user.dto.UserSpecial;
 import com.khodecamp.online.shop.modules.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,18 +28,19 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Get all users")
+    @PreAuthorize("hasPermission('user', 'read')")
     public ResponseDto<List<User>> getAllUsers(@PageableParam PaginationRequest paginationRequest) {
         return ResponseBuilder.paginate(userService.getAllUsers(paginationRequest));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{username}")
     @Operation(summary = "Get user by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    public UserSpecial getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseDto<User> getUserById(@PathVariable String username) {
+        return ResponseBuilder.success(userService.getUserByUsername(username));
     }
 
     @PostMapping

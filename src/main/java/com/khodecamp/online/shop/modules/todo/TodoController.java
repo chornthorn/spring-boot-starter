@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RequestMapping("/api/todos")
 @Slf4j
 @Tag(name = "Todo", description = "Todo API")
+@PreAuthorize("hasRole('admin') and hasPermission('todo', 'read')")
 public class TodoController {
 
     final private TodoService todoService;
